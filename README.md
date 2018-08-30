@@ -7,14 +7,14 @@
 
 ## 动态增加或删除组织
 ### new_org.sh 
-动态增加组织
+1.动态增加组织
 ```
 ./new_org.sh --add <domain> --number <num>
 ```
 + domain: 新增组织的域名，域名的第一部分为组织名
 + num: 新增组织中初始节点数量
 
-删除已有组织
+2.删除已有组织
 ```
 ./new_org.sh --del <orgName>
 ```
