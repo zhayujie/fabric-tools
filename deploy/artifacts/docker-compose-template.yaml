@@ -1,0 +1,95 @@
+version: '2'
+
+networks:
+  default:
+
+services:
+ 
+  ca.DOMAIN:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.DOMAIN-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.DOMAIN-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./DOMAIN/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    container_name: ca_peerORG_NAME
+    networks:
+      - default
+
+  peer0.DOMAIN:
+    container_name: peer0.DOMAIN
+    image: hyperledger/fabric-peer
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.DOMAIN
+      - CORE_PEER_LOCALMSPID=ORG_NAMEMSP
+      - CORE_PEER_ADDRESS=peer0.DOMAIN:7051
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    ports:
+      - 7051:7051
+      - 7053:7053
+    volumes:
+        - ./DOMAIN/peers/peer0.DOMAIN/:/etc/hyperledger/crypto/peer
+    depends_on:
+      - couchdb
+    extra_hosts:
+      - "orderer.example.com:ORDERER_IP"
+
+  couchdb:
+    container_name: couchdb
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 5984:5984
+    networks:
+      - default
+
+  peer1.DOMAIN:
+    container_name: peer1.DOMAIN
+    image: hyperledger/fabric-peer
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.DOMAIN
+      - CORE_PEER_LOCALMSPID=ORG_NAMEMSP
+      - CORE_PEER_ADDRESS=peer1.DOMAIN:7051
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    ports:
+      - 7056:7051
+      - 7058:7053
+    volumes:
+        - ./DOMAIN/peers/peer1.DOMAIN/:/etc/hyperledger/crypto/peer
+    depends_on:
+      - couchdb1
+    extra_hosts:
+      - "orderer.example.com:ORDERER_IP"
+ 
+  couchdb1:
+    container_name: couchdb1
+    image: hyperledger/fabric-couchdb
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 6984:5984
+    networks:
+      - default

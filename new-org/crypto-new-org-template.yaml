@@ -1,0 +1,11 @@
+PeerOrgs:
+  - Name: ORG_NAME
+    Domain: DOMAIN
+    CA:
+       Hostname: ca 
+    Template:
+      Count: NUM
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
