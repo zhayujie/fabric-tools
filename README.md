@@ -24,7 +24,7 @@
 调用SDK实现增加和删除组织的功能
 
 ## 多机部署新组织并加入网络
-###第一步：将deploy目录拷贝至新加入的机器，在目录下执行：
+### 第一步：将deploy目录拷贝至新加入的机器，在目录下执行：
 ```
 sudo ./deploy.sh --domain <domain>  --order <ordererIP>
 ```
@@ -34,7 +34,7 @@ sudo ./deploy.sh --domain <domain>  --order <ordererIP>
 e.g.     sudo ./deploy.sh --domain archain.example.com --order 192.168.1.51
 ```
 
-###第二步：将deploy/artifacts目录下生成的新组织证书目录 (e.g. airchain.example.com) 拷贝到应用程序所在服务器的airtrip/new-org目录下。并在new-org目录下执行：
+### 第二步：将deploy/artifacts目录下生成的新组织证书目录 (e.g. airchain.example.com) 拷贝到应用程序所在服务器的airtrip/new-org目录下。并在new-org目录下执行：
 ```
 sudo ./add_org.sh - -org <orgName> --ip <IP>
 ```
