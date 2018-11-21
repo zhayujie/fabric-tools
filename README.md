@@ -43,5 +43,5 @@ sudo ./add_org.sh - -org <orgName> --ip <IP>
 
 （org参数：新加组织的名称，ip参数：新组织所在机器的ip地址）
 ```
-e.g.     sudo ./add_org.sh --org archain --ip 192.168.1.52
+e.g.     sudo ./add_org.sh --org airchain --ip 192.168.1.52
 ```
