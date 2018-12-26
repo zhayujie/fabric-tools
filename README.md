@@ -4,6 +4,24 @@
 ```
 ./set_config.sh <orgName> <channelName>
 ```
+eg:
+```
+./set_config.sh <RUC> <rucChannel>
+```
+值得注意的是，该脚本只能修改一个组织的名称，暂不支持两个组织同时修改。
+
+## 在组织中添加新的节点
+### new_peer.sh
+执行脚本一键在通道中新增新的节点
+```
+./new_peer.sh --token <ORG_TOKEN> --number <num>
+```
+### 说明：
+该脚本需要的条件，该脚本传入的第一个参数是需要添加组织的token，获取方法见我的笔记。https://app.yinxiang.com/shard/s61/nl/21811079/208e9cd9-8626-46e1-8eac-98ef153473c8/
+该脚本使用的文件有:
++ new-peer-templete.yaml用于为新的Peer节点创建一个新的docker容器。
++ cryptogenNewPeer.yaml用于追加新的证书时使用的文件。
++ network-config.yaml用于通信
 
 ## 动态增加或删除组织
 ### new_org.sh 

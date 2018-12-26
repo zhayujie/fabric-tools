@@ -3,7 +3,7 @@
 IP=
 ORG_NAME=
 DOMAIN=
-CUR_ORG="jetair"			 # one of current orgs in network
+CUR_ORG="jetair"             # one of current orgs in network
 URL="localhost:4000"
 CHANNEL_NAME="airtrip-union"
 
@@ -20,7 +20,11 @@ function modifyConfig() {
         exit 1
     fi
     mv $DOMAIN ../artifacts/channel/crypto-config/peerOrganizations/
+    #rm -rf $DOMAIN
 
+    if [[ -f network-config.json ]]; then
+        rm -f network-config.json
+    fi
     # modify the network-config-template.json
     cp network-config-template.json network-config.json
     sed -i "s/ORG_NAME/$ORG_NAME/g" network-config.json
@@ -59,8 +63,9 @@ function addOrg() {
             "fcn": "add"
     }'
     # add config of new org in network-config.json
-    node modify-network.js $ORG_NAME
-    rm -f network-config.json
+    echo "add config of new org in network-config.json"
+    node modify-network.js $ORG_NAME    
+    rm -f network-config.json       
 
     # enroll by new org
     echo
@@ -84,7 +89,7 @@ function addOrg() {
 
     # install chaincode in new peers
     echo
-    echo "Install chaincode in $ORG_NAME..."
+    echo "Install chaincode in $ORG_NAME new peers..."
     curl -s -X POST \
         http://localhost:4000/chaincodes \
         -H "authorization: Bearer $TOKEN" \
@@ -95,7 +100,7 @@ function addOrg() {
             "chaincodePath":"airtrip.com/airtrip",
             "chaincodeVersion":"v0"
     }'
-
+    echo
     # close configtxlator
     kill -9 $(ps -aux|grep "configtxlator"|grep -v "grep"|awk '{print $2}')
     echo "Add Org successfully"

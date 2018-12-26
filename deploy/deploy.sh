@@ -10,12 +10,19 @@ function printHelp() {
 }
 
 function dockerInstall() {
+    echo "docker Install"
+    # if pkg/ exists
     if [[ -d pkg ]]; then
         cd pkg
     fi
     echo "==> INSTALL DOCKER"
+    # https://blog.csdn.net/dest_dest/article/details/81974595
+    # docker version 
     docker --version > /dev/null 2>&1
+    # RES= docker version
+    # $? -ne 0 means not install docker
     RES=$?
+    # if docker-18.03.0-ce.tgz exist
     if [[ -f  "docker-18.03.0-ce.tgz" && $RES -ne 0 ]]; then
         tar -zxvf docker-18.03.0-ce.tgz
         cp docker/* /usr/bin/
@@ -23,7 +30,7 @@ function dockerInstall() {
         curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://6e4616d7.m.daocloud.io
         kill -9 $(ps -aux|grep "dockerd"|grep -v "grep"|awk '{print $2}')
         dockerd &
-    elif [[ $RES -ne 0 ]]; then
+    elif [[ $RES -ne 0 ]]; then # docker-18.03.0-ce.tgz don not exist 
         yum -y install docker-io
         service docker start
         curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://6e4616d7.m.daocloud.io
@@ -31,12 +38,13 @@ function dockerInstall() {
     fi
     echo "DOCKER DOWNLOAD FINISH"
     echo
+    # INSTALL DOCKER-COMPOSE
     echo "==> INSTALL DOCKER-COMPOSE"
     docker-compose --version > /dev/null 2>&1
     RES=$?
     if [[ -f docker-compose && $RES -ne 0 ]]; then
         cp docker-compose /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose    
     elif [[ $RES -ne 0 ]]; then
         curl -L https://get.daocloud.io/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
         chmod +x /usr/local/bin/docker-compose
@@ -65,6 +73,7 @@ function imagesPull() {
             else
                 docker pull hyperledger/fabric-$IMAGES:$FABRIC_VERSION
             fi
+            # 重命名镜像
             docker tag hyperledger/fabric-$IMAGES hyperledger/fabric-$IMAGES:latest
         fi
     done
@@ -84,14 +93,14 @@ function createNetwork() {
     cp crypto-template.yaml crypto-config.yaml
     sed -i "s/ORG_NAME/$ORG_NAME/g" crypto-config.yaml
     sed -i "s/DOMAIN/$DOMAIN/g" crypto-config.yaml
-    ./cryptogen generate --config=./crypto-config.yaml
+    cryptogen generate --config=./crypto-config.yaml
     mv crypto-config/peerOrganizations/$DOMAIN .
     rm -rf crypto-config
     echo
 
     echo "==> Modify config files"
-    if [[ -f docker-compose.yaml ]]; then
-        rm -f docker-compose.yaml
+    if [[ -f fabric-ca-server-config.yaml ]]; then
+        rm -f fabric-ca-server-config.yaml
     fi
     cp fabric-ca-server-template.yaml fabric-ca-server-config.yaml
     sed -i "s/ORG_NAME/$ORG_NAME/g" fabric-ca-server-config.yaml
