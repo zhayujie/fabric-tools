@@ -90,8 +90,8 @@ function createNetwork() {
     echo
 
     echo "==> Modify config files"
-    if [[ -f docker-compose.yaml ]]; then
-        rm -f docker-compose.yaml
+    if [[ -f fabric-ca-server-config.yaml ]]; then
+        rm -f fabric-ca-server-config.yaml 
     fi
     cp fabric-ca-server-template.yaml fabric-ca-server-config.yaml
     sed -i "s/ORG_NAME/$ORG_NAME/g" fabric-ca-server-config.yaml
