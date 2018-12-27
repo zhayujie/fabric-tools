@@ -4,6 +4,7 @@ ORG_NAME=
 DOMAIN=
 NUM=2
 DEL_ORG=
+ORG1_TOKEN=
 
 function printHelp() {
     echo "Only use this script when you need to add an org in a channel"
@@ -31,11 +32,24 @@ function generateCrypto() {
     ./../artifacts/channel/cryptogen generate --config=./crypto-new-org.yaml --output ./../artifacts/channel/crypto-config
 }
 
+function getToken(){
+    echo "POST request Enroll on Org1  ..."
+    echo
+    ORG1_TOKEN=$(curl -s -X POST \
+      http://localhost:4000/users \
+      -H "content-type: application/x-www-form-urlencoded" \
+      -d 'username=Jim&orgName=jetair&password=123')
+    echo $ORG1_TOKEN
+    ORG1_TOKEN=$(echo $ORG1_TOKEN | jq ".token" | sed "s/\"//g")
+    echo
+    echo "ORG1 token is $ORG1_TOKEN"
+    echo
+}
 
 function addOrg() {
     curl -s -X POST \
     http://localhost:4000/channels/airtrip-union/addNewOrg \
-    -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
+    -H "authorization: Bearer $ORG1_TOKEN" \
     -H "content-type: application/json" \
     -d '{
         "domain": "'$DOMAIN'",
@@ -46,7 +60,7 @@ function addOrg() {
 function delOrg() {
     curl -s -X POST \
     http://localhost:4000/channels/airtrip-union/addNewOrg \
-    -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
+    -H "authorization: Bearer $ORG1_TOKEN" \
     -H "content-type: application/json" \
     -d '{
         "domain": "'$DEL_ORG'",
@@ -66,6 +80,7 @@ if [[ $# -eq 4 && "$1" = "--add" && "$3" = "--number" && -n "$2" && -n "$4" ]]; 
     echo
     startConfigtxlator
     generateCrypto
+    getToken
     addOrg
     closeConfigtxlator
 
