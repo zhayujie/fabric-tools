@@ -58,6 +58,7 @@ function addOrg() {
             "domain": "'$DOMAIN'",
             "fcn": "add"
     }'
+
     # add config of new org in network-config.json
     node modify-network.js $ORG_NAME
     rm -f network-config.json

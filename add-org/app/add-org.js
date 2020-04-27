@@ -169,6 +169,7 @@ var addNewOrg = async function(domain, channel_name, fcn) {
     }
     return result;
 
-}
+};
 
-addNewOrg("org3.example.com", "mychannel", "add")
+// 采用http接口方式调用时注释此行
+// addNewOrg("org3.example.com", "mychannel", "add")
