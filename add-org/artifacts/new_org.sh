@@ -28,13 +28,13 @@ function generateCrypto() {
     sed -i "s/DOMAIN/$DOMAIN/g" crypto-new-org.yaml
     sed -i "s/NUM/$NUM/g" crypto-new-org.yaml
 
-    ./../artifacts/channel/cryptogen generate --config=./crypto-new-org.yaml --output ./../artifacts/channel/crypto-config
+    ./channel/cryptogen generate --config=./crypto-new-org.yaml --output ./../artifacts/channel/crypto-config
 }
 
 
 function addOrg() {
     curl -s -X POST \
-    http://localhost:4000/channels/airtrip-union/addNewOrg \
+    http://localhost:4000/channels/mychannel/addNewOrg \
     -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
     -H "content-type: application/json" \
     -d '{
@@ -45,7 +45,7 @@ function addOrg() {
 
 function delOrg() {
     curl -s -X POST \
-    http://localhost:4000/channels/airtrip-union/addNewOrg \
+    http://localhost:4000/channels/mychannel/addNewOrg \
     -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
     -H "content-type: application/json" \
     -d '{

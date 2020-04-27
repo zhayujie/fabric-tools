@@ -3,9 +3,9 @@
 IP=
 ORG_NAME=
 DOMAIN=
-CUR_ORG="jetair"			 # one of current orgs in network
+CUR_ORG="org1"			 # one of current orgs in network
 URL="localhost:4000"
-CHANNEL_NAME="airtrip-union"
+CHANNEL_NAME="mychannel"
 
 function printHelp() {
     echo "Usage:"
@@ -91,8 +91,8 @@ function addOrg() {
         -H "content-type: application/json" \
         -d '{
             "peers": ["peer1", "peer2"],
-            "chaincodeName":"airtrip",
-            "chaincodePath":"airtrip.com/airtrip",
+            "chaincodeName":"mycc",
+            "chaincodePath":"github.com/example_cc/go",
             "chaincodeVersion":"v0"
     }'
 

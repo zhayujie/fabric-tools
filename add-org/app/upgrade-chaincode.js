@@ -5,7 +5,7 @@ var util = require('util');
 var hfc = require('fabric-client');
 var Peer = require('fabric-client/lib/Peer.js');
 var EventHub = require('fabric-client/lib/EventHub.js');
-var helper = require('./helper.js');
+var helper = require('./multi-machine-deploy/app/helper.js');
 var logger = helper.getLogger('upgrade-chaincode');
 var ORGS = hfc.getConfigSetting('network-config');
 

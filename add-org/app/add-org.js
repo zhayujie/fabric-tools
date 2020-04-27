@@ -7,7 +7,7 @@ var agent = require('superagent-promise')(require('superagent'), Promise);
 var requester = require('request');
 
 require('../config.js');
-var helper = require('./helper.js');
+var helper = require('./multi-machine-deploy/app/helper.js');
 
 var addNewOrg = async function(domain, channel_name, fcn) {
     var orgs = ORGS;
