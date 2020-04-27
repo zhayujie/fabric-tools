@@ -17,7 +17,7 @@
 ## 功能二：动态增加或删除组织
 代码位于`add-org`目录中
 + 首先需要把app.js、add-org.js等二次开发的代码整合到实际项目中：add-org.js放置于app/目录下，并在app.js中添加addNewOrg接口；
-+ 将new_org.sh和crypto-new-org-template.yaml文件放入app的artifacts目录下；
++ 将new_org.sh和crypto-new-org-template.yaml文件放入项目的artifacts目录下；
 + 编译生成configtxlator工具，与new_org.sh脚本置于同一目录下。
 
 完成准备工作后即可实现以下功能：
