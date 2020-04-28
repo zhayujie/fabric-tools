@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CUR_ORG="org1"			 # one of current orgs in network
+TOKEN=
 ORG_NAME=
 DOMAIN=
 NUM=2
@@ -31,11 +33,24 @@ function generateCrypto() {
     ./channel/cryptogen generate --config=./crypto-new-org.yaml --output ./../artifacts/channel/crypto-config
 }
 
+function getToken(){
+    echo "POST request Enroll on Org1  ..."
+    echo
+    TOKEN=$(curl -s -X POST \
+      http://localhost:4000/users \
+      -H "content-type: application/x-www-form-urlencoded" \
+      -d 'username=Jim&orgName=$CUR_ORG&password=123')
+    echo $TOKEN
+    TOKEN=$(echo $TOKEN | jq ".token" | sed "s/\"//g")
+    echo
+    echo "token is $TOKEN"
+    echo
+}
 
 function addOrg() {
     curl -s -X POST \
     http://localhost:4000/channels/mychannel/addNewOrg \
-    -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
+    -H "authorization: Bearer $TOKEN" \
     -H "content-type: application/json" \
     -d '{
         "domain": "'$DOMAIN'",
@@ -46,7 +61,7 @@ function addOrg() {
 function delOrg() {
     curl -s -X POST \
     http://localhost:4000/channels/mychannel/addNewOrg \
-    -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzYwODg0MjIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6ImpldGFpciIsImlhdCI6MTUzMjQ4ODQyMn0.oke8PiZVRBPBA-agkkhmahJovshLGmtlOhBIxj32NIo" \
+    -H "authorization: Bearer $TOKEN" \
     -H "content-type: application/json" \
     -d '{
         "domain": "'$DEL_ORG'",
@@ -66,6 +81,7 @@ if [[ $# -eq 4 && "$1" = "--add" && "$3" = "--number" && -n "$2" && -n "$4" ]]; 
     echo
     startConfigtxlator
     generateCrypto
+    getToken
     addOrg
     closeConfigtxlator
 
@@ -75,6 +91,7 @@ elif [[ $# -eq 2 && "$1" = "--del" && -n "$2" ]]; then
     echo "Delete org"
     echo "Orgname: $DEL_ORG"
     startConfigtxlator
+    getToken
     delOrg
     closeConfigtxlator
 else
